@@ -1,0 +1,1118 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Israel Google</title>
+  <link rel="icon" type="image/png" href="israelgoogle.png" />
+
+  <style>
+    :root {
+      --bg: #f2f2f2;
+      --text: #202124;
+      --muted: #5f6368;
+      --border: #dfe1e5;
+      --border-hover: #cfd2d6;
+      --shadow: 0 1px 6px rgba(32, 33, 36, 0.28);
+      --israel-blue: #0038b8;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      height: 100%;
+    }
+
+    body {
+      margin: 0;
+      font: 16px/1.5 system-ui, -apple-system, BlinkMacSystemFont,
+        "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      color: var(--text);
+      background: var(--bg);
+    }
+
+    .wrap {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .center {
+      position: relative;
+      width: min(92vw, 620px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 30px;
+      transform: translateY(-9vh);
+    }
+
+    .logo {
+      position: relative;
+      width: min(88vw, 420px);
+      height: 188px;
+      user-select: none;
+      filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.12));
+      animation: logoFloat 4.8s ease-in-out infinite;
+    }
+
+    .logo svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+      overflow: visible;
+    }
+
+    .logo .clouds {
+      animation: cloudsDrift 10s ease-in-out infinite alternate;
+      transform-origin: center;
+    }
+
+    .logo .flag-cloth {
+      transform-box: fill-box;
+      transform-origin: left center;
+      animation: flagWave 1.8s ease-in-out infinite;
+    }
+
+    .logo .flag-highlight {
+      animation: flagHighlight 1.8s ease-in-out infinite;
+    }
+
+    @keyframes logoFloat {
+      0%, 100% {
+        transform: translateY(0);
+      }
+
+      50% {
+        transform: translateY(-4px);
+      }
+    }
+
+    @keyframes cloudsDrift {
+      0% {
+        transform: translateX(-3px);
+      }
+
+      100% {
+        transform: translateX(5px);
+      }
+    }
+
+    @keyframes flagWave {
+      0%, 100% {
+        transform: skewY(0deg) scaleX(1);
+      }
+
+      50% {
+        transform: skewY(-2deg) scaleX(0.96);
+      }
+    }
+
+    @keyframes flagHighlight {
+      0%, 100% {
+        opacity: 0.22;
+      }
+
+      50% {
+        opacity: 0.4;
+      }
+    }
+
+    .search {
+      width: 100%;
+      height: 48px;
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 0 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      transition: box-shadow 0.15s ease, border-color 0.15s ease;
+      background: #fafafa;
+    }
+
+    .search:hover {
+      border-color: var(--border-hover);
+      box-shadow: var(--shadow);
+    }
+
+    .search:focus-within {
+      border-color: transparent;
+      box-shadow: var(--shadow);
+    }
+
+    .icon {
+      width: 20px;
+      height: 20px;
+      flex: 0 0 20px;
+      color: var(--muted);
+      opacity: 0.9;
+    }
+
+    input {
+      width: 100%;
+      border: none;
+      outline: none;
+      font-size: 16px;
+      background: transparent;
+    }
+
+    .hint {
+      color: var(--muted);
+      font-size: 13px;
+      text-align: center;
+      margin-top: -16px;
+    }
+
+    .kbd {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+        "Liberation Mono", "Courier New", monospace;
+      font-size: 12px;
+      border: 1px solid #170c96;
+      padding: 2px 6px;
+      border-radius: 6px;
+      background: #fafafa;
+      color: #170c96;
+    }
+
+    .mic {
+      width: 19px;
+      height: 19px;
+      flex: 0 0 19px;
+      color: #4285f4;
+    }
+
+    .share {
+      position: absolute;
+      top: 165px;
+      right: -48px;
+      width: 30px;
+      height: 30px;
+      color: #4285f4;
+    }
+
+    .overlay {
+      position: fixed;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      overflow: hidden;
+    }
+
+    .overlay.show {
+      display: flex;
+    }
+
+
+
+    .google-screen {
+      position: fixed;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      background: white;
+      color: #202124;
+    }
+
+    .overlay.google-mode .google-screen {
+      display: flex;
+    }
+
+    .google-content {
+      width: min(90vw, 584px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 28px;
+    }
+
+    .google-logo {
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: clamp(64px, 12vw, 100px);
+      font-weight: 500;
+      letter-spacing: -6px;
+      user-select: none;
+    }
+
+    .google-logo .blue {
+      color: #4285f4;
+    }
+
+    .google-logo .red {
+      color: #ea4335;
+    }
+
+    .google-logo .yellow {
+      color: #fbbc05;
+    }
+
+    .google-logo .green {
+      color: #34a853;
+    }
+
+    .google-search {
+      width: 100%;
+      height: 46px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0 16px;
+      border: 1px solid #dfe1e5;
+      border-radius: 24px;
+      box-shadow: 0 1px 6px rgba(32, 33, 36, 0.18);
+    }
+
+    .google-search-icon {
+      width: 20px;
+      height: 20px;
+      flex: 0 0 20px;
+      color: #5f6368;
+    }
+
+    .google-search input {
+      width: 100%;
+      height: 100%;
+      border: none;
+      outline: none;
+      font-size: 16px;
+      background: transparent;
+    }
+
+
+
+    .israel-screen {
+      position: fixed;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      background: var(--israel-blue);
+      color: white;
+    }
+
+    .overlay.word-mode .israel-screen {
+      display: flex;
+    }
+
+    .word-wall {
+      width: 125vw;
+      height: 125vh;
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      grid-auto-rows: minmax(90px, 1fr);
+      align-items: center;
+      justify-items: center;
+      transform: rotate(-12deg) scale(1.15);
+      user-select: none;
+    }
+
+    .word-wall span {
+      color: white;
+      font-size: clamp(38px, 8vw, 120px);
+      font-weight: 900;
+      line-height: 1;
+      letter-spacing: -3px;
+      white-space: nowrap;
+      text-shadow: 3px 3px 0 rgba(0, 0, 0, 0.12);
+    }
+
+
+
+    .flag-screen {
+      position: fixed;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      background: white;
+    }
+
+    .overlay.flag-mode .flag-screen {
+      display: flex;
+    }
+
+    .stripe {
+      position: absolute;
+      left: 0;
+      right: 0;
+      height: 15vh;
+      background: var(--israel-blue);
+    }
+
+    .stripe.top {
+      top: 0;
+    }
+
+    .stripe.bottom {
+      bottom: 0;
+    }
+
+    .star {
+      width: min(42vmin, 460px);
+      aspect-ratio: 1 / 1;
+      display: block;
+      filter: drop-shadow(0 6px 18px rgba(0, 0, 0, 0.12));
+    }
+
+    @keyframes flagFlash {
+      0% {
+        filter: brightness(1) contrast(1);
+      }
+
+      10% {
+        filter: brightness(4.5) contrast(1.4);
+      }
+
+      20% {
+        filter: brightness(1) contrast(1);
+      }
+
+      30% {
+        filter: brightness(5) contrast(1.5);
+      }
+
+      40% {
+        filter: brightness(1) contrast(1);
+      }
+
+      50% {
+        filter: brightness(4.2) contrast(1.4);
+      }
+
+      60% {
+        filter: brightness(1) contrast(1);
+      }
+
+      70% {
+        filter: brightness(5.2) contrast(1.6);
+      }
+
+      80% {
+        filter: brightness(1) contrast(1);
+      }
+
+      90% {
+        filter: brightness(4.8) contrast(1.5);
+      }
+
+      100% {
+        filter: brightness(1) contrast(1);
+      }
+    }
+
+    .flag-screen.is-flashing {
+      animation: flagFlash 0.12s linear infinite;
+    }
+
+
+
+    .hate-screen {
+      position: fixed;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      background:
+        radial-gradient(
+          circle at center,
+          #530000 0%,
+          #260000 42%,
+          #080000 100%
+        );
+      color: #120000;
+    }
+
+    .overlay.hate-mode .hate-screen {
+      display: flex;
+    }
+
+    .hate-screen::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        repeating-linear-gradient(
+          0deg,
+          rgba(0, 0, 0, 0.18) 0,
+          rgba(0, 0, 0, 0.18) 2px,
+          transparent 2px,
+          transparent 5px
+        );
+      pointer-events: none;
+    }
+
+    .hate-message {
+      position: relative;
+      z-index: 1;
+      padding: 24px;
+      color: #120000;
+      font-size: clamp(32px, 7vw, 96px);
+      font-weight: 900;
+      line-height: 1.05;
+      letter-spacing: -2px;
+      text-align: center;
+      text-shadow:
+        0 0 8px rgba(0, 0, 0, 0.9),
+        0 0 24px rgba(0, 0, 0, 0.8);
+      animation: scaryFlash 0.75s ease-in-out infinite;
+    }
+
+    @keyframes scaryFlash {
+      0%, 100% {
+        opacity: 0.18;
+        transform: scale(0.98);
+      }
+
+      50% {
+        opacity: 1;
+        transform: scale(1.02);
+      }
+    }
+
+
+
+    .jumpscare-screen {
+      position: fixed;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      background: black;
+      cursor: pointer;
+    }
+
+    .overlay.jumpscare-mode .jumpscare-screen {
+      display: flex;
+    }
+
+    .jumpscare-image {
+      width: 100vw;
+      height: 100vh;
+      object-fit: cover;
+      animation: jumpscareFlash 0.08s linear infinite;
+    }
+
+    @keyframes jumpscareFlash {
+      0% {
+        filter: brightness(1) contrast(1);
+        transform: scale(1);
+      }
+
+      50% {
+        filter: brightness(2.5) contrast(1.8);
+        transform: scale(1.03);
+      }
+
+      100% {
+        filter: brightness(1) contrast(1);
+        transform: scale(1);
+      }
+    }
+
+
+
+    .error-screen {
+      position: fixed;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      background: #008080;
+      font-family: "Segoe UI", Tahoma, sans-serif;
+    }
+
+    .overlay.error-mode .error-screen {
+      display: flex;
+    }
+
+    .error-window {
+      width: min(90vw, 430px);
+      background: #c0c0c0;
+      border: 3px solid;
+      border-color: #ffffff #404040 #404040 #ffffff;
+      box-shadow: 8px 8px 0 rgba(0, 0, 0, 0.35);
+    }
+
+    .error-titlebar {
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 4px 6px;
+      background: #000080;
+      color: white;
+      font-size: 15px;
+      font-weight: bold;
+    }
+
+    .error-close {
+      width: 22px;
+      height: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #c0c0c0;
+      color: black;
+      border: 2px solid;
+      border-color: #ffffff #404040 #404040 #ffffff;
+      font-weight: bold;
+      line-height: 1;
+    }
+    .error-body {
+      display: flex;
+      gap: 18px;
+      align-items: flex-start;
+      padding: 26px 22px 20px;
+      color: #000000;
+      font-size: 15px;
+    }
+    .error-icon {
+      width: 42px;
+      height: 42px;
+      flex: 0 0 42px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #ff0000;
+      color: white;
+      border-radius: 50%;
+      font-size: 30px;
+      font-weight: bold;
+    }
+    .error-text {
+      line-height: 1.4;
+    }
+    .error-button-row {
+      display: flex;
+      justify-content: center;
+      padding: 0 20px 20px;
+    }
+    .error-button {
+      min-width: 90px;
+      padding: 5px 18px;
+      background: #c0c0c0;
+      color: black;
+      border: 2px solid;
+      border-color: #ffffff #404040 #404040 #ffffff;
+      font: inherit;
+      cursor: pointer;
+    }
+    .error-button:active {
+      border-color: #404040 #ffffff #ffffff #404040;
+    }
+    @media (max-width: 700px) {
+      .share {
+        right: 0;
+        top: 150px;
+      }
+      .word-wall {
+        width: 180vw;
+        grid-template-columns: repeat(4, 1fr);
+        transform: rotate(-12deg) scale(1.2);
+      }
+      .word-wall span {
+        font-size: clamp(34px, 10vw, 80px);
+      }
+    }
+    @media (max-width: 420px) {
+      .logo {
+        width: min(88vw, 365px);
+        height: 160px;
+      }
+      .word-wall {
+        width: 220vw;
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      * {
+        transition: none !important;
+      }
+      .flag-screen.is-flashing,
+      .hate-message,
+      .jumpscare-image {
+        animation: none !important;
+      }
+      .logo,
+      .logo .clouds,
+      .logo .flag-cloth,
+      .logo .flag-highlight {
+        animation: none !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="wrap" id="landing">
+    <section class="center">
+      <div class="logo" aria-label="Israel Google-like logo">
+        <svg
+          viewBox="0 0 365 178"
+          role="img"
+          aria-label="Google Israel emblem"
+        >
+          <defs>
+            <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#2f85dc" />
+              <stop offset="1" stop-color="#b9d9c1" />
+            </linearGradient>
+            <clipPath id="domeClip">
+              <path d="M76 110a107 107 0 0 1 214 0v10H76z" />
+            </clipPath>
+          </defs>
+          <path
+            d="M76 110a107 107 0 0 1 214 0v10H76z"
+            fill="url(#sky)"
+            stroke="#1559bf"
+            stroke-width="5"
+          />
+          <g class="clouds" clip-path="url(#domeClip)" opacity=".8" fill="#fff">
+            <path
+              d="M42 93c28-18 42 3 63-6 22-9 33-16 54-4 20 12 43-9 63-1 19 8 40 1 75 9v31H42z"
+              opacity=".35"
+            />
+            <path
+              d="M56 111c19-14 33-4 52-12 20-9 35-1 52 7 23 10 45-12 72-4 24 7 39-2 72 4v17H56z"
+              opacity=".26"
+            />
+          </g>
+          <path d="M151 43v76" stroke="#86705f" stroke-width="4" />
+          <g class="flag-cloth">
+            <path d="M154 46h75v43h-75z" fill="#fff" />
+            <path
+              d="M154 46h75v9h-75zm0 34h75v9h-75z"
+              fill="#2355b7"
+            />
+            <path
+              class="flag-highlight"
+              d="M154 58c20 4 42-4 75 0v8c-33-4-55 4-75 0z"
+              fill="#fff"
+            />
+            <g
+              class="flag-star"
+              fill="none"
+              stroke="#2355b7"
+              stroke-width="2.2"
+              stroke-linejoin="round"
+            >
+              <path d="M191.5 56.5 202 75h-21z" />
+              <path d="m191.5 82.5-10.5-19h21z" />
+            </g>
+          </g>
+          <path d="M60 112h245l-7 45H67z" fill="#0e5bc6" />
+          <path d="M60 112h245l-8 9H68z" fill="#2676dd" opacity=".9" />
+          <path d="M67 157h231l-8 10H75z" fill="#174da9" />
+          <text
+            x="182.5"
+            y="144"
+            text-anchor="middle"
+            font-family="Arial, Helvetica, sans-serif"
+            font-size="39"
+            letter-spacing="2"
+            fill="#fff"
+          >
+            GOOGLE
+          </text>
+        </svg>
+      </div>
+      <div
+        class="search"
+        id="searchBox"
+        role="search"
+        aria-label="Search"
+      >
+        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+          <path
+            fill="currentColor"
+            d="M10 18a8 8 0 1 1 5.293-14.01A8 8 0 0 1 10 18Zm0-2a6 6 0 1 0-4.243-10.243A6 6 0 0 0 10 16Zm10.707 5.293-5.4-5.4 1.414-1.414 5.4 5.4-1.414 1.414Z"
+          />
+        </svg>
+        <input
+          id="q"
+          type="text"
+          placeholder="Search"
+          autocomplete="off"
+          aria-label="Search"
+        />
+        <svg class="mic" viewBox="0 0 24 24" aria-hidden="true">
+          <path
+            fill="currentColor"
+            d="M12 14a3 3 0 0 0 3-3V6a3 3 0 0 0-6 0v5a3 3 0 0 0 3 3Zm5-3a5 5 0 0 1-10 0H5a7 7 0 0 0 6 6.92V21H8v2h8v-2h-3v-3.08A7 7 0 0 0 19 11h-2Z"
+          />
+        </svg>
+      </div>
+      <svg
+        class="share"
+        viewBox="0 0 24 24"
+        aria-label="Share"
+        role="img"
+      >
+        <path
+          fill="currentColor"
+          d="M18 16a3 3 0 0 0-2.39 1.2L8.91 13.8a3.1 3.1 0 0 0 0-3.6l6.7-3.4A3 3 0 1 0 15 5a3.1 3.1 0 0 0 .16.94l-6.7 3.4a3 3 0 1 0 0 5.32l6.7 3.4A3 3 0 1 0 18 16Z"
+        />
+      </svg>
+      <div class="hint">
+        Hosted by <span class="kbd">Benjamin Netanyahu</span>
+      </div>
+    </section>
+  </main>
+  <div
+    class="overlay"
+    id="overlay"
+    aria-hidden="true"
+  >
+    <div
+      class="google-screen"
+      id="googleScreen"
+      aria-label="Google homepage"
+    >
+      <div class="google-content">
+        <div class="google-logo" aria-label="Google">
+          <span class="blue">G</span><span class="red">o</span
+          ><span class="yellow">o</span><span class="blue">g</span
+          ><span class="green">l</span><span class="red">e</span>
+        </div>
+        <div class="google-search">
+          <svg class="google-search-icon" viewBox="0 0 24 24">
+            <path
+              fill="currentColor"
+              d="M10 18a8 8 0 1 1 5.293-14.01A8 8 0 0 1 10 18Zm0-2a6 6 0 1 0-4.243-10.243A6 6 0 0 0 10 16Zm10.707 5.293-5.4-5.4 1.414-1.414 5.4 5.4-1.414 1.414Z"
+            />
+          </svg>
+          <input
+            id="googleQuery"
+            type="text"
+            autocomplete="off"
+            aria-label="Google search"
+          />
+        </div>
+      </div>
+    </div>
+    <div
+      class="israel-screen"
+      id="israelScreen"
+      aria-label="Israel"
+    >
+      <div
+        class="word-wall"
+        id="wordWall"
+        aria-hidden="true"
+      ></div>
+    </div>
+    <div
+      class="flag-screen"
+      id="flagScreen"
+      aria-label="Israel flag"
+    >
+      <div class="stripe top"></div>
+      <div class="stripe bottom"></div>
+      <svg
+        class="star"
+        viewBox="0 0 100 100"
+        role="img"
+        aria-label="Star of David"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <g
+          fill="none"
+          stroke="#0038b8"
+          stroke-width="3.2"
+          stroke-linejoin="round"
+        >
+          <path d="M50 13 82 68H18Z" />
+          <path d="m50 87-32-55h64Z" />
+        </g>
+      </svg>
+    </div>
+    <div
+      class="hate-screen"
+      id="hateScreen"
+      aria-label="Warning"
+    >
+      <div class="hate-message">
+        netanyahu is coming….
+      </div>
+    </div>
+    <div
+      class="jumpscare-screen"
+      id="jumpscareScreen"
+      aria-label="Jump scare"
+    >
+      <img
+        class="jumpscare-image"
+        src="EvilScary.jpeg"
+        alt="Scary image"
+      />
+    </div>
+    <div
+      class="error-screen"
+      id="errorScreen"
+      aria-label="Windows error"
+    >
+      <div class="error-window">
+        <div class="error-titlebar">
+          <span>Windows Error</span>
+          <span class="error-close">×</span>
+        </div>
+        <div class="error-body">
+          <div class="error-icon">×</div>
+          <div class="error-text">
+            <strong>Critical error</strong><br />
+            The requested search could not be completed.<br /><br />
+            Error code: 0x80070057
+          </div>
+        </div>
+        <div class="error-button-row">
+          <button
+            class="error-button"
+            id="errorOkButton"
+            type="button"
+          >
+            OK
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <audio
+    id="israelAudio"
+    src="Israel%20theme.mp3"
+    preload="auto"
+    loop
+  ></audio>
+  <audio
+    id="flagAudio"
+    src="IsraelJam.mp3"
+    preload="auto"
+    loop
+  ></audio>
+  <audio
+    id="hateAudio"
+    src="SpookyIsrael.mp3"
+    preload="auto"
+    loop
+  ></audio>
+  <audio
+    id="screamAudio"
+    src="Scream.mp3"
+    preload="auto"
+  ></audio>
+  <audio
+    id="errorAudio"
+    src="Error.mp3"
+    preload="auto"
+  ></audio>
+  <script>
+    const searchBox = document.getElementById("searchBox");
+    const overlay = document.getElementById("overlay");
+    const q = document.getElementById("q");
+    const googleQuery = document.getElementById("googleQuery");
+    const wordWall = document.getElementById("wordWall");
+    const flagScreen = document.getElementById("flagScreen");
+    const jumpscareScreen = document.getElementById("jumpscareScreen");
+    const errorOkButton = document.getElementById("errorOkButton");
+    const israelAudio = document.getElementById("israelAudio");
+    const flagAudio = document.getElementById("flagAudio");
+    const hateAudio = document.getElementById("hateAudio");
+    const screamAudio = document.getElementById("screamAudio");
+    const errorAudio = document.getElementById("errorAudio");
+    let flashLoopTimer = null;
+    function createWordWall() {
+      wordWall.innerHTML = "";
+      for (let i = 0; i < 90; i++) {
+        const word = document.createElement("span");
+        word.textContent = "Israel";
+        wordWall.appendChild(word);
+      }
+    }
+    function startFlagFlashLoop() {
+      const idleMs = 5000;
+      const flashMs = 50000;
+      function runCycle() {
+        flashLoopTimer = setTimeout(() => {
+          flagScreen.classList.add("is-flashing");
+          flashLoopTimer = setTimeout(() => {
+            flagScreen.classList.remove("is-flashing");
+            runCycle();
+          }, flashMs);
+        }, idleMs);
+      }
+      runCycle();
+    }
+    function stopFlagFlashLoop() {
+      if (flashLoopTimer) {
+        clearTimeout(flashLoopTimer);
+      }
+      flashLoopTimer = null;
+      flagScreen.classList.remove("is-flashing");
+    }
+    function stopAllAudio() {
+      israelAudio.pause();
+      israelAudio.currentTime = 0;
+      flagAudio.pause();
+      flagAudio.currentTime = 0;
+      hateAudio.pause();
+      hateAudio.currentTime = 0;
+      screamAudio.pause();
+      screamAudio.currentTime = 0;
+      errorAudio.pause();
+      errorAudio.currentTime = 0;
+    }
+    function setOverlayMode(mode) {
+      overlay.classList.remove(
+        "word-mode",
+        "flag-mode",
+        "hate-mode",
+        "google-mode",
+        "jumpscare-mode",
+        "error-mode"
+      );
+      overlay.classList.add("show", mode);
+      overlay.setAttribute("aria-hidden", "false");
+    }
+    function openGoogleScreen() {
+      stopFlagFlashLoop();
+      stopAllAudio();
+      setOverlayMode("google-mode");
+      setTimeout(() => {
+        googleQuery.focus();
+      }, 50);
+    }
+    function openIsraelScreen() {
+      stopFlagFlashLoop();
+      stopAllAudio();
+      createWordWall();
+      setOverlayMode("word-mode");
+      israelAudio.currentTime = 0;
+      israelAudio.play().catch(() => {
+        console.warn("Israel theme audio was blocked by the browser.");
+      });
+      enterFullscreen();
+    }
+    function openFlagScreen() {
+      stopFlagFlashLoop();
+      stopAllAudio();
+      setOverlayMode("flag-mode");
+      flagAudio.currentTime = 0;
+      flagAudio.play().catch(() => {
+        console.warn("IsraelJam audio was blocked by the browser.");
+      });
+      startFlagFlashLoop();
+      enterFullscreen();
+    }
+    function openHateScreen() {
+      stopFlagFlashLoop();
+      stopAllAudio();
+      setOverlayMode("hate-mode");
+      hateAudio.currentTime = 0;
+      hateAudio.play().catch(() => {
+        console.warn("SpookyIsrael audio was blocked by the browser.");
+      });
+      enterFullscreen();
+    }
+    function openJumpScare() {
+      stopFlagFlashLoop();
+      stopAllAudio();
+      setOverlayMode("jumpscare-mode");
+      screamAudio.currentTime = 0;
+      screamAudio.play().catch(() => {
+        console.warn("Scream audio was blocked by the browser.");
+      });
+      enterFullscreen();
+    }
+    function openErrorScreen() {
+      stopFlagFlashLoop();
+      stopAllAudio();
+      setOverlayMode("error-mode");
+      errorAudio.currentTime = 0;
+      errorAudio.play().catch(() => {
+        console.warn("Error audio was blocked by the browser.");
+      });
+      enterFullscreen();
+    }
+    function enterFullscreen() {
+      const html = document.documentElement;
+      if (html.requestFullscreen && !document.fullscreenElement) {
+        html.requestFullscreen().catch(() => {});
+      }
+    }
+    function closeOverlay() {
+      stopFlagFlashLoop();
+      stopAllAudio();
+      overlay.classList.remove(
+        "show",
+        "word-mode",
+        "flag-mode",
+        "hate-mode",
+        "google-mode",
+        "jumpscare-mode",
+        "error-mode"
+      );
+      overlay.setAttribute("aria-hidden", "true");
+      if (document.fullscreenElement && document.exitFullscreen) {
+        document.exitFullscreen().catch(() => {});
+      }
+      q.value = "";
+      googleQuery.value = "";
+      q.focus();
+    }
+    searchBox.addEventListener("click", () => {
+      q.focus();
+    });
+    q.addEventListener("keydown", (event) => {
+      if (event.key !== "Enter") {
+        return;
+      }
+      event.preventDefault();
+      const searchTerm = q.value.trim().toLowerCase();
+      if (!searchTerm) {
+        return;
+      }
+      if (searchTerm === "israel") {
+        openIsraelScreen();
+      } else if (searchTerm === "i hate israel") {
+        openHateScreen();
+      } else if (searchTerm === "google") {
+        openGoogleScreen();
+      } else if (searchTerm === "palestine") {
+        openErrorScreen();
+      } else {
+        openFlagScreen();
+      }
+    });
+    googleQuery.addEventListener("keydown", (event) => {
+      if (event.key !== "Enter") {
+        return;
+      }
+      event.preventDefault();
+      const searchTerm = googleQuery.value.trim();
+      if (!searchTerm) {
+        return;
+      }
+      openJumpScare();
+    });
+    document.addEventListener("keydown", (event) => {
+      if (
+        event.key === "Escape" &&
+        overlay.classList.contains("show")
+      ) {
+        closeOverlay();
+      }
+    });
+    errorOkButton.addEventListener("click", closeOverlay);
+    jumpscareScreen.addEventListener("click", closeOverlay);
+  </script>
+</body>
+</html>
